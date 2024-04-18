@@ -1,18 +1,21 @@
-import InputLabel from "@mui/material/InputLabel";
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+import {
+  InputLabel,
+  Button,
+  MenuItem,
+  FormControl,
+  Select,
+  TextField,
+} from "@mui/material";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "../../components/Navbar";
-
 import estilos from "./cadastro.module.css";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 const Cadastro = () => {
   const [nome, setNome] = useState("");
@@ -22,6 +25,22 @@ const Cadastro = () => {
   const [restaurantes, setRestaurantes] = useState([]);
   const [tag, setTag] = useState("");
   const [restaurante, setRestaurante] = useState("");
+  const [btnValue, setBtnValue] = useState("Cadastrar");
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      setBtnValue("Atualizar");
+      axios.get(`http://localhost:8000/api/v2/pratos/${id}/`).then((res) => {
+        console.log(res);
+        setNome(res.data.nome);
+        setDesc(res.data.descricao);
+        setTag(res.data.tag);
+        setRestaurante(res.data.restaurante);
+      });
+    }
+  }, [id]);
 
   useEffect(() => {
     axios
@@ -35,12 +54,7 @@ const Cadastro = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      nome !== "" &&
-      restaurante !== "" &&
-      tag !== "" &&
-      desc !== ""
-    ) {
+    if (nome !== "" && restaurante !== "" && tag !== "" && desc !== "") {
       salvar();
     } else {
       toast.warn("Preencha todos os campos");
@@ -48,17 +62,33 @@ const Cadastro = () => {
   };
 
   const salvar = () => {
-    axios
-      .post("http://localhost:8000/api/v2/pratos/", {
-        nome,
-        restaurante,
-        tag,
-        descricao: desc,
-      })
-      .then(() => toast.success("Cadastro realizado com sucesso!"))
-      .catch((err) => {
-        toast.error(err);
-      });
+    if (id) {
+      axios
+        .put(`http://localhost:8000/api/v2/pratos/${id}/`, {
+          nome,
+          descricao: desc,
+          tag,
+          restaurante,
+        })
+        .then(() => {
+          toast.success("Prato atualizado com sucesso ");
+        })
+        .catch((err) => {
+          toast.error(err);
+        });
+    } else {
+      axios
+        .post("http://localhost:8000/api/v2/pratos/", {
+          nome,
+          restaurante,
+          tag,
+          descricao: desc,
+        })
+        .then(() => toast.success("Cadastro realizado com sucesso!"))
+        .catch((err) => {
+          toast.error(err);
+        });
+    }
   };
 
   return (
@@ -74,6 +104,7 @@ const Cadastro = () => {
               <TextField
                 id="outlined-basic"
                 label="Nome do prato"
+                value={nome}
                 variant="outlined"
                 className={estilos.input}
                 onChange={(e) => setNome(e.target.value)}
@@ -114,14 +145,19 @@ const Cadastro = () => {
                   ))}
                 </Select>
               </FormControl>
-              
-              <input type="file" className={estilos.input} onChange={(e)=>setImg(e.target.value)}/>
+
+              <input
+                type="file"
+                className={estilos.input}
+                onChange={(e) => setImg(e.target.value)}
+              />
             </div>
 
             <div className={estilos.font_item}>
               <TextField
                 className={estilos.input}
                 label="Descrição"
+                value={desc}
                 multiline
                 rows={4}
                 onChange={(e) => setDesc(e.target.value)}
@@ -129,7 +165,7 @@ const Cadastro = () => {
             </div>
             <div className={estilos.font_item}>
               <Button type="submit" variant="contained" className={estilos.btn}>
-                Cadastrar
+                <p className={estilos.btn}>{btnValue}</p>
               </Button>
             </div>
           </form>

@@ -20,6 +20,9 @@ import { FaImages, FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { useFetch } from "../../hooks/useFetch";
 import Navbar from "../../components/Navbar";
 import estilos from "./listagem.module.css";
@@ -32,6 +35,7 @@ const Listagem = () => {
   } = useFetch("http://localhost:8000/api/v1/pratos/");
   const [pratosCarregados, setPratosCarregados] = useState(pratos || []);
   const [pages, setPages] = useState({});
+  
 
   useEffect(() => {
     setPratosCarregados(pratos);
@@ -50,7 +54,6 @@ const Listagem = () => {
         current: nextPage,
         nextPage: res.data.next,
       });
-      console.log(pages);
     });
   };
 
@@ -65,6 +68,18 @@ const Listagem = () => {
       });
     });
   };
+
+  const deletar = (id) =>{
+    axios.delete(`http://localhost:8000/api/v2/pratos/${id}/`)
+      .then(()=>{
+        const newList = pratosCarregados.filter(prato => prato.id !== id)
+        setPratosCarregados([...newList])
+        toast.success("Prato deletado com sucesso!")
+      })
+      .catch((err)=>{
+        toast.error(err)
+      })
+  }
 
   return (
     <>
@@ -102,19 +117,25 @@ const Listagem = () => {
                       <TableCell align="center">{prato.tag}</TableCell>
                       <TableCell align="center">
                         <a href={prato.imagem} target="_blank" rel="noreferrer">
-                          {prato.imagem && <FaImages className={estilos.icone_img} size={25} />}
+                          {prato.imagem && (
+                            <FaImages className={estilos.icone_img} size={25} />
+                          )}
                           {!prato.imagem && <TbFaceIdError size={30} />}
                         </a>
                       </TableCell>
                       <TableCell align="center">{prato.restaurante}</TableCell>
                       <TableCell align="center">
-                        <Link to={`/pratos/${prato.id}`}>
+                        <Link to={`/novo/${prato.id}`}>
                           <FaEdit className={estilos.icone_editar} size={25} />
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                        <Link to={`/pratos/${prato.id}`}>
-                          <MdDelete className={estilos.icone_del} size={25} />
+                        <Link to={`/del/${prato.id}`}>
+                          <MdDelete
+                            className={estilos.icone_del}
+                            size={25}
+                            onClick={() => deletar(prato.id)}
+                          />
                         </Link>
                       </TableCell>
                       <TableCell></TableCell>
@@ -147,6 +168,7 @@ const Listagem = () => {
             </TableContainer>
           </div>
         </main>
+        <ToastContainer/>
       </div>
     </>
   );
