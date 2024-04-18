@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   Paper,
@@ -10,26 +11,60 @@ import {
   TableRow,
   TableBody,
   TableFooter,
-  Pagination,
-  Stack,
+  TablePagination,
 } from "@mui/material";
 
 import { IoMdAddCircle } from "react-icons/io";
-import { DataGrid } from '@mui/x-data-grid';
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { FaImages, FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { TbFaceIdError } from "react-icons/tb";
 
 import { useFetch } from "../../hooks/useFetch";
 import Navbar from "../../components/Navbar";
 import estilos from "./listagem.module.css";
 
 const Listagem = () => {
-  const { 
+  const {
     data: pratos,
     isLoading,
     nextPage,
   } = useFetch("http://localhost:8000/api/v1/pratos/");
-  // const [pratosCarregados, setPratosCarregados] = useState()
+  const [pratosCarregados, setPratosCarregados] = useState(pratos || []);
+  const [pages, setPages] = useState({});
 
-  useEffect(() => {}, [pratos]);
+  useEffect(() => {
+    setPratosCarregados(pratos);
+    setPages({
+      prev: "",
+      current: "http://localhost:8000/api/v1/pratos/",
+      nextPage,
+    });
+  }, [pratos]);
+
+  const handleNextPage = () => {
+    axios.get(pages.nextPage).then((res) => {
+      setPratosCarregados(res.data.results);
+      setPages({
+        prev: res.data.previous,
+        current: nextPage,
+        nextPage: res.data.next,
+      });
+      console.log(pages);
+    });
+  };
+
+  const handlePreviousPage = () => {
+    // console.log(prevPage)
+    axios.get(pages.prev).then((res) => {
+      setPratosCarregados(res.data.results);
+      setPages({
+        prev: res.data.previous,
+        current: nextPage,
+        nextPage: res.data.next,
+      });
+    });
+  };
 
   return (
     <>
@@ -47,6 +82,8 @@ const Listagem = () => {
                     <TableCell align="center">Tag</TableCell>
                     <TableCell align="center">Imagem</TableCell>
                     <TableCell align="center">Restaurante</TableCell>
+                    <TableCell align="center">Editar</TableCell>
+                    <TableCell align="center">Excluir</TableCell>
                     <TableCell align="center">
                       <Link to={"/novo"}>
                         <IoMdAddCircle
@@ -59,30 +96,50 @@ const Listagem = () => {
                 </TableHead>
                 <TableBody>
                   {isLoading && <p>Carregando...</p>}
-                  {pratos.map((prato) => (
+                  {pratosCarregados.map((prato) => (
                     <TableRow key={prato.id}>
                       <TableCell align="center">{prato.nome}</TableCell>
                       <TableCell align="center">{prato.tag}</TableCell>
                       <TableCell align="center">
-                        <a href={prato.imagem}>[Ver imagem]</a>
+                        <a href={prato.imagem} target="_blank" rel="noreferrer">
+                          {prato.imagem && <FaImages className={estilos.icone_img} size={25} />}
+                          {!prato.imagem && <TbFaceIdError size={30} />}
+                        </a>
                       </TableCell>
                       <TableCell align="center">{prato.restaurante}</TableCell>
-                      <TableCell align="center"></TableCell>
+                      <TableCell align="center">
+                        <Link to={`/pratos/${prato.id}`}>
+                          <FaEdit className={estilos.icone_editar} size={25} />
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Link to={`/pratos/${prato.id}`}>
+                          <MdDelete className={estilos.icone_del} size={25} />
+                        </Link>
+                      </TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
                 <TableFooter>
-                  <TableRow>
-                    <TableCell>
-                      <Stack spacing={1}>
-                        <Pagination
-                          count={pratos.length}
-                          rowPerPage={[5]}
-                          variant="outlined"
-                          shape="rounded"
-                          onClick={(e)=>console.log(e.target.value)}
+                  <TableRow className={estilos.table_footer}>
+                    <TableCell colSpan={6}></TableCell>
+                    <TableCell align="center">
+                      {pages.prev && (
+                        <GrFormPrevious
+                          className={estilos.btn_pg}
+                          size={35}
+                          onClick={() => handlePreviousPage()}
                         />
-                      </Stack>
+                      )}
+                      Ver mais
+                      {pages.nextPage && (
+                        <GrFormNext
+                          className={estilos.btn_pg}
+                          size={35}
+                          onClick={() => handleNextPage()}
+                        />
+                      )}
                     </TableCell>
                   </TableRow>
                 </TableFooter>

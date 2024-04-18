@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-
 import axios from "axios";
+
 
 export const useFetch = (url) => {
   const [data, setData] = useState([]);
@@ -19,5 +19,5 @@ export const useFetch = (url) => {
       });
   }, []);
 
-  return { data, isLoading, nextPage };
+  return { data, isLoading, nextPage};
 };

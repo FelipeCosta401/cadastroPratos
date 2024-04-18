@@ -22,3 +22,43 @@ header{
 .iconeCriar{
     color: green;
 }
+
+.iconeCriar:hover{
+    position: relative;
+    bottom: 2px;
+}
+
+.icone_del{
+    color: red;
+}
+
+.icone_del:hover{
+    position: relative;
+    bottom: 2px;
+}
+
+.icone_editar{
+    color: blue;
+}
+
+.icone_editar:hover{
+    position: relative;
+    bottom: 2px;
+}
+
+.icone_img:hover{
+    position: relative;
+    bottom: 2px;
+}
+
+
+
+.btn_pg{
+    cursor: pointer;
+    border-radius: 100px;
+    color: #000;
+}
+
+.btn_pg:hover{
+    background-color: rgba(196, 196, 196, 0.8);
+}
