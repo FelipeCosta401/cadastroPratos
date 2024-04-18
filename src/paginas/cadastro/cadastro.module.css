@@ -1,0 +1,39 @@
+
+
+main{
+    padding: 30px;
+}
+
+.container{
+    background-color: #fff;    
+    padding: 30px;
+    width: 65vw;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.form{
+    margin-top: 15px;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(2, 1fr); 
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr; 
+    }
+}
+
+.font_item{
+    width: 25vw;
+    margin: 5px 0;
+}
+
+.input{
+    width: 20vw;
+}
+
+.btn{
+    width: 20vw;    
+}
