@@ -54,14 +54,23 @@ const Cadastro = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formData = new FormData()
     if (nome !== "" && restaurante !== "" && tag !== "" && desc !== "") {
-      salvar();
+
+      formData.append("nome", nome)
+      formData.append("restaurante", restaurante)
+      formData.append("tag", tag)
+      formData.append("descricao", desc)
+      if(img){
+        formData.append("imagem", img)
+      }
+      salvar(formData);
     } else {
       toast.warn("Preencha todos os campos");
     }
   };
 
-  const salvar = () => {
+  const salvar = (formData) => {    
     if (id) {
       axios
         .put(`http://localhost:8000/api/v2/pratos/${id}/`, {
@@ -78,16 +87,24 @@ const Cadastro = () => {
         });
     } else {
       axios
-        .post("http://localhost:8000/api/v2/pratos/", {
-          nome,
-          restaurante,
-          tag,
-          descricao: desc,
+        .request({
+          url: "http://localhost:8000/api/v2/pratos/",
+          method: "POST",
+          header: {
+            "Content-Type": "multipart/form-data"
+          },
+          data: formData
         })
         .then(() => toast.success("Cadastro realizado com sucesso!"))
         .catch((err) => {
-          toast.error(err);
+          toast.error("Algo deu errado! estamos trabalhando nisso...")
         });
+    }
+  };
+
+  const salvarImg = (e) => {
+    if (e.target.files?.length) {
+      setImg(e.target.files[0]);
     }
   };
 
@@ -149,7 +166,7 @@ const Cadastro = () => {
               <input
                 type="file"
                 className={estilos.input}
-                onChange={(e) => setImg(e.target.value)}
+                onChange={salvarImg}
               />
             </div>
 

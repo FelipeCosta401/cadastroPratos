@@ -110,7 +110,7 @@ const Listagem = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {isLoading && <p>Carregando...</p>}
+                  {isLoading && "Carregando..."}
                   {pratosCarregados.map((prato) => (
                     <TableRow key={prato.id}>
                       <TableCell align="center">{prato.nome}</TableCell>
@@ -153,6 +153,7 @@ const Listagem = () => {
                           onClick={() => handlePreviousPage()}
                         />
                       )}
+                      
                       Ver mais
                       {pages.nextPage && (
                         <GrFormNext
