@@ -1,36 +1,9 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-
-import { useFetch } from "../../hooks/useFetch";
 import Navbar from "../../components/Navbar";
-import CardComponent from "../../components/Card";
 
 import estilos from "./home.module.css";
+import Carrousel from "../../components/Carrousel";
 
 const Home = () => {
-  const { data: pratos, nextPage: currentPage} = useFetch(
-    "http://localhost:8000/api/v1/pratos/"
-  );
-  const [pratosCarregados, setPratosCarregados] = useState([]);
-  const [nextPage, setNextPage] = useState()
-
-
-  useEffect(() => {
-    if (pratos.length > 0) {
-      setPratosCarregados(pratos);
-      setNextPage(currentPage)
-    }
-  }, [pratos]);
-
-  
-
-  const proxPagina = () => {
-    axios.get(nextPage).then((res) => {
-      setPratosCarregados([...pratosCarregados, ...res.data.results]);
-      setNextPage(res.data.next)
-    });
-  };
-
 
   return (
     <>
@@ -39,24 +12,7 @@ const Home = () => {
           <Navbar />
         </header>
         <main>
-          <div className={estilos.cards}>
-            {pratosCarregados.map((prato) => (
-              <div className={estilos.card} key={prato.id}>
-                <CardComponent
-                  titulo={prato.nome}
-                  desc={prato.descricao}
-                  img={prato.imagem}
-                />
-              </div>
-            ))}
-          </div>
-          {nextPage && (
-            <input
-              type="submit"
-              onClick={() => proxPagina()}  
-              value="Ver mais"
-            />
-          )}
+          <Carrousel/>          
         </main>
         <footer>
           <h4>Desenvolvido por Felipe Antunes</h4>

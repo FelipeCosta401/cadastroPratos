@@ -11,7 +11,6 @@ import {
   TableRow,
   TableBody,
   TableFooter,
-  TablePagination,
 } from "@mui/material";
 
 import { IoMdAddCircle } from "react-icons/io";
@@ -32,10 +31,9 @@ const Listagem = () => {
     data: pratos,
     isLoading,
     nextPage,
-  } = useFetch("http://localhost:8000/api/v1/pratos/");
+  } = useFetch("http://localhost:8000/api/v1/pratos/", true);
   const [pratosCarregados, setPratosCarregados] = useState(pratos || []);
   const [pages, setPages] = useState({});
-  
 
   useEffect(() => {
     setPratosCarregados(pratos);
@@ -69,17 +67,18 @@ const Listagem = () => {
     });
   };
 
-  const deletar = (id) =>{
-    axios.delete(`http://localhost:8000/api/v2/pratos/${id}/`)
-      .then(()=>{
-        const newList = pratosCarregados.filter(prato => prato.id !== id)
-        setPratosCarregados([...newList])
-        toast.success("Prato deletado com sucesso!")
+  const deletar = (id) => {
+    axios
+      .delete(`http://localhost:8000/api/v2/pratos/${id}/`)
+      .then(() => {
+        const newList = pratosCarregados.filter((prato) => prato.id !== id);
+        setPratosCarregados([...newList]);
+        toast.success("Prato deletado com sucesso!");
       })
-      .catch((err)=>{
-        toast.error(err)
-      })
-  }
+      .catch((err) => {
+        toast.error(err);
+      });
+  };
 
   return (
     <>
@@ -153,7 +152,6 @@ const Listagem = () => {
                           onClick={() => handlePreviousPage()}
                         />
                       )}
-                      
                       Ver mais
                       {pages.nextPage && (
                         <GrFormNext
@@ -169,7 +167,7 @@ const Listagem = () => {
             </TableContainer>
           </div>
         </main>
-        <ToastContainer/>
+        <ToastContainer />
       </div>
     </>
   );
