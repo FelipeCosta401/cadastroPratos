@@ -12,15 +12,16 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
 const Carrousel = () => {
   const { data: pratos, nextPage } = useFetch(
-    "http://localhost:8000/api/v1/pratos/", false
+    "http://localhost:8000/api/v1/pratos/",
+    false
   );
   const [pratosCarregados, setPratosCarregados] = useState([]);
+  const [numVisible, setNumVisible] = useState(2);
 
   useEffect(() => {
     setPratosCarregados([...pratos]);
   }, [pratos]);
-
-  // const { data: pratos2, nextPage: page3} = useFetch(nextPage)
+  
 
   const productTemplate = (prato) => {
     return (
@@ -41,12 +42,11 @@ const Carrousel = () => {
       </>
     );
   };
-
   return (
     <>
       <Carousel
         value={pratos}
-        numVisible={2}
+        numVisible={numVisible}
         numScroll={1}
         orientation="horizontal"
         verticalViewPortHeight="500px"
@@ -58,7 +58,7 @@ const Carrousel = () => {
         }
         nextIcon={
           <i className="pi pi-chevron-down">
-            <FaArrowRight size={25} />
+            <FaArrowRight size={25}/>
           </i>
         }
       />

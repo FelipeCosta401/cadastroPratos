@@ -19,6 +19,18 @@ footer{
     height: 10%;
 }
 
+.content{
+    padding: 30px 60px;
+    background-color: rgba(188, 188, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.6);
+}
+
+.title{
+    margin-bottom: 15px;
+    color: white;
+}
+
 
 .cards {
     display: grid;

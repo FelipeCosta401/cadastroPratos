@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useFetch } from "../../hooks/useFetch";
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import estilos from "./listagem.module.css";
 
 const Listagem = () => {
@@ -167,6 +168,9 @@ const Listagem = () => {
             </TableContainer>
           </div>
         </main>
+        <footer>
+          <Footer />
+        </footer>
         <ToastContainer />
       </div>
     </>

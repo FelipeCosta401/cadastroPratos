@@ -15,6 +15,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import estilos from "./cadastro.module.css";
 
 const Cadastro = () => {
@@ -188,6 +189,9 @@ const Cadastro = () => {
           </form>
         </div>
       </main>
+      <footer>
+        <Footer/>
+      </footer>
       <ToastContainer />
     </>
   );

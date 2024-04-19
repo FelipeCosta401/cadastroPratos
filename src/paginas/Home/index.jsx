@@ -1,10 +1,10 @@
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 
 import estilos from "./home.module.css";
 import Carrousel from "../../components/Carrousel";
 
 const Home = () => {
-
   return (
     <>
       <div className={estilos.container}>
@@ -12,10 +12,13 @@ const Home = () => {
           <Navbar />
         </header>
         <main>
-          <Carrousel/>          
+          <div className={estilos.content}>
+            <h1 className={estilos.title}>Pratos da casa</h1>
+            <Carrousel />
+          </div>
         </main>
         <footer>
-          <h4>Desenvolvido por Felipe Antunes</h4>
+          <Footer />
         </footer>
       </div>
     </>

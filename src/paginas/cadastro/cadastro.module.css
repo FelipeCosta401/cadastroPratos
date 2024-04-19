@@ -11,6 +11,7 @@ main{
     margin: 0 auto;
     text-align: center;
     border-radius: 8px;
+    height: 70;   
 }
 
 .form{
