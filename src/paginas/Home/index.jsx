@@ -7,20 +7,18 @@ import Carrousel from "../../components/Carrousel";
 const Home = () => {
   return (
     <>
-      <div className={estilos.container}>
-        <header>
-          <Navbar />
-        </header>
-        <main>
-          <div className={estilos.content}>
-            <h1 className={estilos.title}>Pratos da casa</h1>
-            <Carrousel />
-          </div>
-        </main>
-        <footer>
-          <Footer />
-        </footer>
-      </div>
+      <header>
+        <Navbar />
+      </header>
+      <main className={estilos.main}>
+        <div className={estilos.content}>
+          <h1 className={estilos.title}>Pratos da casa</h1>
+          <Carrousel />
+        </div>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };

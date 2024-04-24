@@ -2,25 +2,23 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import {
-  Paper,
-  Table,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableBody,
-  TableFooter,
-} from "@mui/material";
+import { Dialog } from "primereact/dialog";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Button } from "primereact/button";
+import "primereact/resources/themes/saga-blue/theme.css";
 
-import { IoMdAddCircle } from "react-icons/io";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { FaImages, FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import { TbFaceIdError } from "react-icons/tb";
+import { FaImages } from "react-icons/fa";
+import {
+  MdModeEdit,
+  MdDelete,
+  MdNavigateNext,
+  MdNavigateBefore,
+  MdAdd,
+} from "react-icons/md";
 
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
 
 import { useFetch } from "../../hooks/useFetch";
 import Navbar from "../../components/Navbar";
@@ -35,6 +33,9 @@ const Listagem = () => {
   } = useFetch("http://localhost:8000/api/v1/pratos/", true);
   const [pratosCarregados, setPratosCarregados] = useState(pratos || []);
   const [pages, setPages] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [position, setPosition] = useState("center");
+  const [idPratoDelete, setIdPratoDelete] = useState(null)
 
   useEffect(() => {
     setPratosCarregados(pratos);
@@ -70,109 +71,157 @@ const Listagem = () => {
 
   const deletar = (id) => {
     axios
-      .delete(`http://localhost:8000/api/v2/pratos/${id}/`)
+      .delete(`http://localhost:8000/api/v2/pratos/${id}/`) 
       .then(() => {
         const newList = pratosCarregados.filter((prato) => prato.id !== id);
         setPratosCarregados([...newList]);
-        toast.success("Prato deletado com sucesso!");
+        window.location.href = "http://localhost:3000/pratos";
       })
       .catch((err) => {
         toast.error(err);
+      })
+      .finally(() => {
+        toast.success("Prato deletado com sucesso!");
       });
+  };
+
+  const footerContent = (
+    <div>
+      <Button
+        label="Não"
+        icon="pi pi-times"
+        onClick={() => setVisible(false)}
+        className={estilos.btn}
+        autoFocus
+      />
+      <Button
+        label="Sim"
+        icon="pi pi-check"
+        severity="danger"
+        className={estilos.btn}
+        onClick={() => deletar(idPratoDelete)}
+      />
+    </div>
+  );
+
+  const show = (position, id) => {
+    setPosition(position);
+    setIdPratoDelete(id)
+    setVisible(true);
   };
 
   return (
     <>
-      <div className={estilos.container}>
-        <header>
-          <Navbar />
-        </header>
-        <main className={estilos.main}>
-          <div className={estilos.tabela}>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Nome</TableCell>
-                    <TableCell align="center">Tag</TableCell>
-                    <TableCell align="center">Imagem</TableCell>
-                    <TableCell align="center">Restaurante</TableCell>
-                    <TableCell align="center">Editar</TableCell>
-                    <TableCell align="center">Excluir</TableCell>
-                    <TableCell align="center">
-                      <Link to={"/novo"}>
-                        <IoMdAddCircle
-                          className={estilos.iconeCriar}
-                          size={30}
-                        />
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {isLoading && "Carregando..."}
-                  {pratosCarregados.map((prato) => (
-                    <TableRow key={prato.id}>
-                      <TableCell align="center">{prato.nome}</TableCell>
-                      <TableCell align="center">{prato.tag}</TableCell>
-                      <TableCell align="center">
-                        <a href={prato.imagem} target="_blank" rel="noreferrer">
-                          {prato.imagem && (
-                            <FaImages className={estilos.icone_img} size={25} />
-                          )}
-                          {!prato.imagem && <TbFaceIdError size={30} />}
-                        </a>
-                      </TableCell>
-                      <TableCell align="center">{prato.restaurante}</TableCell>
-                      <TableCell align="center">
-                        <Link to={`/novo/${prato.id}`}>
-                          <FaEdit className={estilos.icone_editar} size={25} />
-                        </Link>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Link to={`/del/${prato.id}`}>
-                          <MdDelete
-                            className={estilos.icone_del}
-                            size={25}
-                            onClick={() => deletar(prato.id)}
-                          />
-                        </Link>
-                      </TableCell>
-                      <TableCell></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow className={estilos.table_footer}>
-                    <TableCell colSpan={6}></TableCell>
-                    <TableCell align="center">
-                      {pages.prev && (
-                        <GrFormPrevious
-                          className={estilos.btn_pg}
-                          size={35}
-                          onClick={() => handlePreviousPage()}
-                        />
-                      )}
-                      Ver mais
-                      {pages.nextPage && (
-                        <GrFormNext
-                          className={estilos.btn_pg}
-                          size={35}
-                          onClick={() => handleNextPage()}
-                        />
-                      )}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
+      <header>
+        <Navbar />
+      </header>
+      <main className={estilos.main}>
+        <div className={estilos.cardContainer}>
+          <h2>Administração de pratos</h2>
+          {!pages.prev && (
+            <Link to={`/novo`}>
+              <Button
+                className={estilos.btnCadastro}
+                label="Cadastrar novo prato"
+                severity="success"
+              >
+                <MdAdd size={30} />
+              </Button>
+            </Link>
+          )}
+
+          {pratosCarregados.map((prato) => (
+            <Accordion className={estilos.card} key={prato.id}>
+              <AccordionTab header={prato.nome}>
+                <div className={estilos.cardContent}>
+                  <div className={estilos.cardInfo}>
+                    <p>
+                      <strong>Nome:</strong> {prato.nome}
+                    </p>
+                    <p>
+                      <strong>Tag:</strong> {prato.tag}
+                    </p>
+                    <p>
+                      <strong>Descrição:</strong> {prato.descricao}
+                    </p>
+                    <p>
+                      <strong>Imagem:</strong>{" "}
+                      <a href={prato.imagem} target="_blank" rel="noreferrer">
+                        <FaImages size={35} />
+                      </a>
+                    </p>
+                  </div>
+                  <div className={estilos.cardButtons}>
+                    <Link to={`/novo/${prato.id}`}>
+                      <Button className={estilos.btn} label="Editar">
+                        <MdModeEdit size={35} />
+                      </Button>
+                    </Link>
+                    <Link to={`/del/${prato.id}`}>
+                      <Button
+                        className={estilos.btn}
+                        label="Excluir"
+                        severity="danger"
+                        onClick={() => show("top", prato.id)}
+                      >
+                        <MdDelete size={35} />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </AccordionTab>
+            </Accordion>
+          ))}
+          <div className={estilos.pagination}>
+            {pages.prev && (
+              <MdNavigateBefore
+                size={45}
+                className={estilos.paginationBtn}
+                onClick={handlePreviousPage}
+              />
+            )}
+            {!pages.prev && (
+              <MdNavigateBefore
+                className={estilos.paginationBtnDisable}
+                size={45}
+              />
+            )}
+            <p className={estilos.paginationDesc}>Ver mais</p>
+            {pages.nextPage && (
+              <MdNavigateNext
+                size={45}
+                className={estilos.paginationBtn}
+                onClick={handleNextPage}
+              />
+            )}
+            {!pages.nextPage && (
+              <MdNavigateNext
+                size={45}
+                className={estilos.paginationBtnDisable}
+              />
+            )}
           </div>
-        </main>
-        <footer>
-          <Footer />
-        </footer>
-        <ToastContainer />
-      </div>
+        </div>
+        <div>
+          <Dialog
+            header="Excluir"
+            visible={visible}
+            position={position}
+            style={{ width: "50vw" }}
+            onHide={() => setVisible(false)}
+            footer={footerContent}
+            draggable={false}
+            resizable={false}
+            className={estilos.dialog}
+          >
+            <p>Deseja exlcuir este prato?</p>
+          </Dialog>
+        </div>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+      <ToastContainer />
     </>
   );
 };

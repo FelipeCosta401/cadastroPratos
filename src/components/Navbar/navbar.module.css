@@ -7,6 +7,7 @@
     padding: 0 10vw;
     border-radius: 8px;
     background-color: #fff;
+    height: 17vh;
 
 }
 
@@ -24,4 +25,16 @@
     color: black;
     font-size: 1.3rem;
     font-weight: 600;
+}
+
+@media(max-width: 500px){
+    .container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container img{
+        display: none;
+    }
 }

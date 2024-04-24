@@ -55,15 +55,14 @@ const Cadastro = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData()
+    const formData = new FormData();
     if (nome !== "" && restaurante !== "" && tag !== "" && desc !== "") {
-
-      formData.append("nome", nome)
-      formData.append("restaurante", restaurante)
-      formData.append("tag", tag)
-      formData.append("descricao", desc)
-      if(img){
-        formData.append("imagem", img)
+      formData.append("nome", nome);
+      formData.append("restaurante", restaurante);
+      formData.append("tag", tag);
+      formData.append("descricao", desc);
+      if (img) {
+        formData.append("imagem", img);
       }
       salvar(formData);
     } else {
@@ -71,7 +70,7 @@ const Cadastro = () => {
     }
   };
 
-  const salvar = (formData) => {    
+  const salvar = (formData) => {
     if (id) {
       axios
         .put(`http://localhost:8000/api/v2/pratos/${id}/`, {
@@ -92,13 +91,13 @@ const Cadastro = () => {
           url: "http://localhost:8000/api/v2/pratos/",
           method: "POST",
           header: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
           },
-          data: formData
+          data: formData,
         })
         .then(() => toast.success("Cadastro realizado com sucesso!"))
         .catch((err) => {
-          toast.error("Algo deu errado! estamos trabalhando nisso...")
+          toast.error("Algo deu errado! estamos trabalhando nisso...");
         });
     }
   };
@@ -111,88 +110,98 @@ const Cadastro = () => {
 
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
-      <main>
-        <div className={estilos.container}>
-          <h3>Cadastrar novo prato</h3>
-          <form className={estilos.form} onSubmit={(e) => handleSubmit(e)}>
-            <div className={estilos.font_item}>
-              <TextField
-                id="outlined-basic"
-                label="Nome do prato"
-                value={nome}
-                variant="outlined"
-                className={estilos.input}
-                onChange={(e) => setNome(e.target.value)}
-              />
+      <div className={estilos.app}>
+        <header>
+          <Navbar />
+        </header>
+        <main className={estilos.main}>
+          <div className={estilos.container}>
+            <div className={estilos.containerTitle}>
+              <h3>Cadastrar novo prato</h3>
             </div>
-            <div className={estilos.font_item}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel>Tag</InputLabel>
-                <Select
-                  label="Tags"
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  className={estilos.input}
-                >
-                  {tags.map((tag) => (
-                    <MenuItem key={tag.id} value={tag.value}>
-                      {tag.value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className={estilos.font_item}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">
-                  Restaurante
-                </InputLabel>
-                <Select
-                  value={restaurante}
-                  label="Restaurante"
-                  onChange={(e) => setRestaurante(e.target.value)}
-                  className={estilos.input}
-                >
-                  {restaurantes.map((restaurante) => (
-                    <MenuItem key={restaurante.id} value={restaurante.id}>
-                      {restaurante.nome}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <fieldset>
+              <form className={estilos.form} onSubmit={(e) => handleSubmit(e)}>
+                <div className={estilos.item}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Nome do prato"
+                    value={nome}
+                    variant="outlined"
+                    className={estilos.input}
+                    onChange={(e) => setNome(e.target.value)}
+                  />
+                </div>
+                <div className={estilos.item}>
+                  <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel>Tag</InputLabel>
+                    <Select
+                      label="Tags"
+                      value={tag}
+                      onChange={(e) => setTag(e.target.value)}
+                      className={estilos.select}
+                    >
+                      {tags.map((tag) => (
+                        <MenuItem key={tag.id} value={tag.value}>
+                          {tag.value}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className={estilos.item}>
+                  <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Restaurante
+                    </InputLabel>
+                    <Select
+                      value={restaurante}
+                      label="Restaurante"
+                      onChange={(e) => setRestaurante(e.target.value)}
+                      className={estilos.select}
+                    >
+                      {restaurantes.map((restaurante) => (
+                        <MenuItem key={restaurante.id} value={restaurante.id}>
+                          {restaurante.nome}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-              <input
-                type="file"
-                className={estilos.input}
-                onChange={salvarImg}
-              />
-            </div>
+                  <input
+                    type="file"
+                    className={estilos.input}
+                    onChange={salvarImg}
+                  />
+                </div>
 
-            <div className={estilos.font_item}>
-              <TextField
-                className={estilos.input}
-                label="Descrição"
-                value={desc}
-                multiline
-                rows={4}
-                onChange={(e) => setDesc(e.target.value)}
-              />
-            </div>
-            <div className={estilos.font_item}>
-              <Button type="submit" variant="contained" className={estilos.btn}>
-                <p className={estilos.btn}>{btnValue}</p>
-              </Button>
-            </div>
-          </form>
-        </div>
-      </main>
-      <footer>
-        <Footer/>
-      </footer>
-      <ToastContainer />
+                <div className={estilos.item}>
+                  <TextField
+                    className={estilos.input}
+                    label="Descrição"
+                    value={desc}
+                    multiline
+                    onChange={(e) => setDesc(e.target.value)}
+                  />
+                </div>
+              </form>
+              <div className={estilos.containerBtn}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className={estilos.btn}
+                >
+                  <p className={estilos.btn}>{btnValue}</p>
+                </Button>
+              </div>
+            </fieldset>
+
+            <ToastContainer />
+          </div>
+        </main>
+        <footer>
+          <Footer />
+        </footer>
+      </div>
     </>
   );
 };

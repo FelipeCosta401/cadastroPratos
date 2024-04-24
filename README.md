@@ -6,11 +6,11 @@
 <hr />
 
 <h4>Home page</h4>
-<img src="./src/assets/home.jpg" alt="foto demosntrativa da interface do projeto" />
+<img src="./src/assets/NovaHome.jpg" alt="foto demosntrativa da interface do projeto" />
 
 
 <h4>Página de listagem dos pratos</h4>
-<img src="./src/assets/listagem.jpg" alt="foto demosntrativa da interface de listagem de pratos" />
+<img src="./src/assets/NovaListagem.jpg.jpg" alt="foto demosntrativa da interface de listagem de pratos" />
 
 
 <h4>Autor:</h4>
