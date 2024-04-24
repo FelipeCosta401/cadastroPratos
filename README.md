@@ -10,7 +10,7 @@
 
 
 <h4>Página de listagem dos pratos</h4>
-<img src="./src/assets/NovaListagem.jpg.jpg" alt="foto demosntrativa da interface de listagem de pratos" />
+<img src="./src/assets/NovaListagem.jpg" alt="foto demosntrativa da interface de listagem de pratos" />
 
 
 <h4>Autor:</h4>
